@@ -30,7 +30,7 @@ public class ComponentFunction {
 
         try {
             return templateEngine.render(templateFile, model);
-        } catch (IOException e) {
+        } catch (Exception e) {
             log.error("", e);
 
             if (devMode) {
