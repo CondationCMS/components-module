@@ -22,29 +22,24 @@ package com.condation.cms.modules.components;
  * #L%
  */
 
+import com.condation.cms.api.configuration.configs.SiteConfiguration;
+import com.condation.cms.api.feature.features.ConfigurationFeature;
 import com.condation.cms.api.module.CMSModuleContext;
-import com.condation.cms.api.module.CMSRequestContext;
-import com.condation.modules.api.ModuleLifeCycleExtension;
-import com.condation.modules.api.annotation.Extension;
 
-import lombok.extern.slf4j.Slf4j;
+public final class Helpers {
 
-/**
- *
- * @author t.marx
- */
-@Slf4j
-@Extension(ModuleLifeCycleExtension.class)
-public class ComponentsLifecycleExtension extends ModuleLifeCycleExtension<CMSModuleContext, CMSRequestContext> {
+    private Helpers () {}
 
-
-	@Override
-	public void init() {
-
-	}
-
-	@Override
-	public void activate() {
-	}
-
+    public static String getTemplateFileExtension (CMSModuleContext context) {
+        var templateExtension = context.get(ConfigurationFeature.class).configuration()
+                    .get(SiteConfiguration.class)
+                    .siteProperties()
+                    .getOrDefault("template.extension", "html");
+        
+        if (templateExtension.startsWith(".")) {
+            templateExtension = templateExtension.substring(1);
+        }
+        
+        return templateExtension;
+    }
 }
