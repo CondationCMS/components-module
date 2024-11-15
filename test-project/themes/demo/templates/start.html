@@ -16,6 +16,10 @@
 	<div th:utext="${ components.render('test', #{'title':'Hallo','message':'Schön, dass ihr da seid!'}) }">
 		should be replaced by component
 	</div>
+
+	<div th:utext="${ components.render('test-hook', #{'name':'CondationCMS'}) }">
+		should be replaced by component
+	</div>
 </body>
 
 

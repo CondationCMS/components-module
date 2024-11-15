@@ -25,6 +25,7 @@ package com.condation.cms.modules.components;
 import static org.mockito.Mockito.times;
 
 import java.io.IOException;
+import java.util.Map;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,6 +35,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.condation.cms.api.hooks.HookSystem;
 import com.condation.cms.api.template.TemplateEngine;
 
 @ExtendWith(MockitoExtension.class)
@@ -42,11 +44,14 @@ public class ComponentFunctionTest {
     @Mock
     TemplateEngine templateEngine;
 
+    HookSystem hookSystem;
+
     ComponentFunction sut;
 
     @BeforeEach
     void setup () {
-        sut = new ComponentFunction(templateEngine, true, "html");
+        hookSystem = new HookSystem();
+        sut = new ComponentFunction(templateEngine, hookSystem, true, "html");
     }
 
     @Test
@@ -73,5 +78,17 @@ public class ComponentFunctionTest {
 
         Mockito.verify(templateEngine, times(1))
             .render(Mockito.eq("components/address.html"), Mockito.any(TemplateEngine.Model.class));
+    }
+
+    @Test
+    void hook_component () throws IOException {
+
+        hookSystem.registerAction("components/test-hook",  (context) -> {
+            return "Hello %s!".formatted(context.arguments().get("name"));
+        });
+
+        var result = sut.render("test-hook", Map.of("name", "CondationCMS"));
+
+        Assertions.assertThat(result).isEqualTo("Hello CondationCMS!");
     }
 }

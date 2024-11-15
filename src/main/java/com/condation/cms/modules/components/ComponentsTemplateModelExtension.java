@@ -22,9 +22,8 @@ package com.condation.cms.modules.components;
  * #L%
  */
 
-import com.condation.cms.api.configuration.configs.SiteConfiguration;
 import com.condation.cms.api.extensions.TemplateModelExtendingExtensionPoint;
-import com.condation.cms.api.feature.features.ConfigurationFeature;
+import com.condation.cms.api.feature.features.HookSystemFeature;
 import com.condation.cms.api.feature.features.IsDevModeFeature;
 import com.condation.cms.api.feature.features.TemplateEngineFeature;
 import com.condation.cms.api.template.TemplateEngine.Model;
@@ -39,6 +38,7 @@ public class ComponentsTemplateModelExtension extends TemplateModelExtendingExte
             "components", 
             new ComponentFunction(
                 getRequestContext().get(TemplateEngineFeature.class).templateEngine(),
+                getRequestContext().get(HookSystemFeature.class).hookSystem(),
                 getRequestContext().has(IsDevModeFeature.class),
                 Helpers.getTemplateFileExtension(getContext())
                 )

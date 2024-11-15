@@ -6,9 +6,10 @@
     "configurations": [
         {
             "type": "java",
-            "name": "Current File",
-            "request": "launch",
-            "mainClass": "${file}"
+            "name": "Attach",
+            "request": "attach",
+            "hostName": "127.0.0.1",
+            "port": "8000"
         }
     ]
 }

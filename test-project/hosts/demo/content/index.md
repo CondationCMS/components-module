@@ -9,6 +9,8 @@ search:
 
 ![TestBild!](/media/images/test.jpg?format=small)
 
-[[components name="test" title="Hello md" message="this messages is in markdown, generated with a shortcode" /]]
+[[components component="test" title="Hello md" message="this messages is in markdown, generated with a shortcode" /]]
 
-[[components name="sub/test2" title="Hello md" message="this messages is in markdown, generated with a shortcode" /]]
+[[components component="sub/test2" title="Hello md" message="this messages is in markdown, generated with a shortcode" /]]
+
+[[components component="test-hook" name="CondationCMS" /]]

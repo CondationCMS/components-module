@@ -25,7 +25,9 @@ package com.condation.cms.modules.components;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
+import com.condation.cms.api.hooks.HookSystem;
 import com.condation.cms.api.model.Parameter;
 import com.condation.cms.api.template.TemplateEngine;
 
@@ -37,6 +39,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ComponentFunction {
 
     private final TemplateEngine templateEngine;
+    private final HookSystem hookSystem;
     private final boolean devMode;
     private final String templateExtension;
 
@@ -44,7 +47,26 @@ public class ComponentFunction {
         return render(name, Collections.emptyMap());
     }
 
+    private Optional<String> tryHook (String name, Map<String, Object> data) {
+
+        var hookName = "components/%s".formatted(name);
+
+        var result = hookSystem.execute(hookName, data);
+
+        if (!result.results().isEmpty()
+            && result.results().getFirst() instanceof String stringValue) {
+            return Optional.of(stringValue);
+        }
+
+        return Optional.empty();
+    }
+
     public String render (String name, Map<String, Object> data) {
+
+        var hookResult = tryHook(name, data);
+        if (hookResult.isPresent()) {
+            return hookResult.get();
+        }
 
         var templateFile = "components/%s.%s".formatted(name, templateExtension);
 
@@ -65,10 +87,10 @@ public class ComponentFunction {
     }
 
     public String execute (Parameter parameter) {
-        var name = (String)parameter.get("name");
+        var name = (String)parameter.get("component");
         
         var model = new HashMap<>(parameter);
-        model.remove("name");
+        model.remove("component");
 
         return render(name, model);
     }
