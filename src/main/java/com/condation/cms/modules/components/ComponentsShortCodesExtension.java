@@ -26,9 +26,6 @@ import java.util.Map;
 import java.util.function.Function;
 
 import com.condation.cms.api.extensions.RegisterShortCodesExtensionPoint;
-import com.condation.cms.api.feature.features.HookSystemFeature;
-import com.condation.cms.api.feature.features.IsDevModeFeature;
-import com.condation.cms.api.feature.features.TemplateEngineFeature;
 import com.condation.cms.api.model.Parameter;
 import com.condation.modules.api.annotation.Extension;
 
@@ -39,10 +36,7 @@ public class ComponentsShortCodesExtension extends RegisterShortCodesExtensionPo
     public Map<String, Function<Parameter, String>> shortCodes() {
 
         var componentFunction = new ComponentFunction(
-                getRequestContext().get(TemplateEngineFeature.class).templateEngine(),
-                getRequestContext().get(HookSystemFeature.class).hookSystem(),
-                getRequestContext().has(IsDevModeFeature.class),
-                Helpers.getTemplateFileExtension(getContext())
+				getContext(), getRequestContext()
                 );
 
         return Map.of(

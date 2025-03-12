@@ -36,6 +36,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.condation.cms.api.hooks.HookSystem;
+import com.condation.cms.api.module.CMSRequestContext;
 import com.condation.cms.api.template.TemplateEngine;
 
 @ExtendWith(MockitoExtension.class)
@@ -48,10 +49,13 @@ public class ComponentFunctionTest {
 
     ComponentFunction sut;
 
+	@Mock
+	CMSRequestContext cmsRequestContext;
+	
     @BeforeEach
     void setup () {
         hookSystem = new HookSystem();
-        sut = new ComponentFunction(templateEngine, hookSystem, true, "html");
+        sut = new ComponentFunction(templateEngine, hookSystem, true, "html", cmsRequestContext);
     }
 
     @Test
