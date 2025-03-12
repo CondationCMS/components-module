@@ -22,21 +22,25 @@ package com.condation.cms.modules.components;
  * #L%
  */
 
-import com.condation.cms.api.extensions.TemplateModelExtendingExtensionPoint;
-import com.condation.cms.api.template.TemplateEngine.Model;
+import java.util.Map;
+import java.util.function.Function;
+
+import com.condation.cms.api.extensions.RegisterTemplateComponentExtensionPoint;
+import com.condation.cms.api.model.Parameter;
 import com.condation.modules.api.annotation.Extension;
 
-@Extension(TemplateModelExtendingExtensionPoint.class)
-public class ComponentsTemplateModelExtension extends TemplateModelExtendingExtensionPoint{
+@Extension(RegisterTemplateComponentExtensionPoint.class)
+public class RegisterTemplateComponentExtension extends RegisterTemplateComponentExtensionPoint {
 
     @Override
-    public void extendModel(Model model) {
-        model.values.put(
-            "components", 
-            new ComponentFunction(getContext(), getRequestContext())
-        );
-    }
+	public Map<String, Function<Parameter, String>> components() {
+		var componentFunction = new ComponentFunction(
+				getContext(), getRequestContext()
+                );
 
-    
+        return Map.of(
+            "components", componentFunction::execute
+        );
+	}
 
 }

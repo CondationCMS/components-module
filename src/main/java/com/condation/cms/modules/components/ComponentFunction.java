@@ -22,6 +22,9 @@ package com.condation.cms.modules.components;
  * #L%
  */
 
+import com.condation.cms.api.feature.features.HookSystemFeature;
+import com.condation.cms.api.feature.features.IsDevModeFeature;
+import com.condation.cms.api.feature.features.TemplateEngineFeature;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -29,20 +32,32 @@ import java.util.Optional;
 
 import com.condation.cms.api.hooks.HookSystem;
 import com.condation.cms.api.model.Parameter;
+import com.condation.cms.api.module.CMSModuleContext;
+import com.condation.cms.api.module.CMSRequestContext;
 import com.condation.cms.api.template.TemplateEngine;
-
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+
 import lombok.extern.slf4j.Slf4j;
 
+@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 @Slf4j
-@RequiredArgsConstructor
 public class ComponentFunction {
 
     private final TemplateEngine templateEngine;
     private final HookSystem hookSystem;
     private final boolean devMode;
     private final String templateExtension;
-
+	private final CMSRequestContext cmsRequestContext;
+	
+	public ComponentFunction (CMSModuleContext context, CMSRequestContext requestContext) {
+		this.templateEngine = requestContext.get(TemplateEngineFeature.class).templateEngine();
+		this.hookSystem = requestContext.get(HookSystemFeature.class).hookSystem();
+		this.devMode = requestContext.has(IsDevModeFeature.class);
+		this.templateExtension = Helpers.getTemplateFileExtension(context);
+		this.cmsRequestContext = requestContext;
+	}
+	
     public String render (String name) {
         return render(name, Collections.emptyMap());
     }
@@ -70,7 +85,7 @@ public class ComponentFunction {
 
         var templateFile = "components/%s.%s".formatted(name, templateExtension);
 
-        TemplateEngine.Model model = new TemplateEngine.Model(null, null);
+		TemplateEngine.Model model = new TemplateEngine.Model(null, null, cmsRequestContext);
         model.values.putAll(data);
 
         try {

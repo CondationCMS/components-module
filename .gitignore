@@ -1,1 +1,5 @@
 target/
+test-project/lib
+test-project/logs/
+test-project/modules/
+test-project/*.*
